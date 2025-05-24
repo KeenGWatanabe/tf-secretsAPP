@@ -38,7 +38,7 @@ const start = async () => {
       throw new Error('MongoDB URI not configured - set MONGO_URI environment variable');
     }
 
-    await connectDB(mongoURI || "mongodb://localhost:27017/taskmgr");
+    await connectDB(mongoURI);
     
     app.listen(port, () => {
       console.log(`Server is listening on port ${port}...`);
