@@ -18,7 +18,7 @@ RUN npm install -g nodemon && npm install
 COPY . .
 
 # Copy .env file (ensure it's not in .dockerignore)
-# COPY .env .
+COPY .env .
 
 # Expose the app's port (adjust if your app uses a different port)
 EXPOSE 5000
