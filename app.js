@@ -25,6 +25,7 @@ const start = async () => {
     app.listen(port, () =>
       console.log(`Server is listening on port ${port}...`)
     );
+    console.log(`Connected to MongoDB: ${mongoURI ? 'AWS Secret' : 'Localhost'}`);
   } catch (error) {
     console.log(error);
   }
