@@ -26,7 +26,7 @@ In order to run the project, setup .env and set MONGO_URI variable equal to DB c
 
 Setup admin for app, user for demo taskmgr
 name: user
-pw: 1234
+pw: ****
 
 # db access role setup
 ![db access roles](/images/image.png)
