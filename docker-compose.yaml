@@ -2,7 +2,7 @@ services:
   app:
     build: .
     ports:
-      - "5000:5000"  # Maps host:container ports
+      - "3000:3000"  # Maps host:container ports
     environment:
       - MONGODB_URI=${MONGO_URI}  # Adjust based on your app's config
     command: sh -c "sleep 5 && npm start"
