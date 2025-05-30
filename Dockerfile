@@ -21,7 +21,7 @@ COPY . .
 COPY .env .
 
 # Expose the app's port (adjust if your app uses a different port)
-EXPOSE 5000
+EXPOSE 3000
 
 # Command to run the app (matches your npm start script)
 CMD ["node", "app.js"]
