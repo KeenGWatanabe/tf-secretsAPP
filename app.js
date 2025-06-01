@@ -21,7 +21,7 @@ app.use(errorHandlerMiddleware)
 
 // const start = async () => {
 //   try {
-//     await connectDB(process.env.MONGO_URI || "mongodb://localhost:27017/taskmgr");
+//     await connectDB(process.env.MONGODB_URI || "mongodb://localhost:27017/taskmgr");
 //     app.listen(port, () =>
 //       console.log(`Server is listening on port ${port}...`)
 //     );
