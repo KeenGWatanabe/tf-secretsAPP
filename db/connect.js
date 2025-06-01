@@ -1,30 +1,42 @@
 const mongoose = require('mongoose')
 
-// const connectDB = (MONGODB_URI) => {
-// return mongoose.connect(url, {
-//     useNewUrlParser: true,
-//     // useCreateIndex: true,
-//     // useFindAndModify: false,
-//     useUnifiedTopology: true,
-// })
-//    }
-//// secrets fixes
-const connectDB = (MONGODB_URI) => {
-  // Set up event listeners first
-  mongoose.connection.on('connected', () => {
-    console.log('✅ MongoDB connected successfully!');
-  });
-  
-  mongoose.connection.on('error', (err) => {
-    console.error('❌ MongoDB connection error:', err);
-  });
+////We will fetch credentials from AWS Secretst Manager dynamically//////////////
+const AWS = require('aws-sdk');
+const secretsManager = new AWS.SecretsManager({region: 'us-east-1'});
 
-  // Return the connection promise
-  return mongoose.connect(MONGODB_URI)
-    .catch(err => {
-      console.error('❌ Initial MongoDB connection failed:', err);
-      throw err; // Re-throw if you want calling code to handle it
+const getSecretValue = async (secretName) => {
+  try {
+    const data = await secretsManager.getSecretValue({ SecretId: secretName }).promise();
+    if (data.SecretString) {
+      return JSON.parse(data.SecretString);
+    }
+    return {};
+  } catch (error) {
+    console.error('❌ Error retrieving secret:', error);
+    throw error;
+  }
+};
+const connectDB = async () => {
+  try {
+    console.log('🔍 Fetching DB credentials from Secrets Manager...');
+    const secretData = await getSecretValue('prod/mongodb_uri'); // Replace with your secret ARN or name
+    const MONGODB_URI = secretData.MONGODB_URI;
+
+    if (!MONGODB_URI || !MONGODB_URI.startsWith('mongodb')) {
+      throw new Error('❌ Invalid MONGODB_URI retrieved from Secrets Manager');
+    }
+
+    console.log('🔍 Connecting to MongoDB...');
+    await mongoose.connect(MONGODB_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
     });
+
+    console.log('✅ MongoDB connection established');
+  } catch (error) {
+    console.error('❌ MongoDB connection failed:', error);
+    throw error;
+  }
 };
 
 module.exports = connectDB
