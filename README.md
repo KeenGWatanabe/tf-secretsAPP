@@ -91,3 +91,6 @@ aws ecr get-login-password --region us-east-1 | sudo docker login --username AWS
 sudo docker push 255945442255.dkr.ecr.us-east-1.amazonaws.com/nodejs-app:latest
 
 # run ECS.tf (G4infra) before pushing images to it
+
+# snyk check passed!
+![snyk check in workflows](image.png)
