@@ -1,0 +1,103 @@
+name: Node.js to ECR Deployment
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  AWS_REGION: us-east-1                   # Change if needed
+  ECR_REPOSITORY: tf-secrets-app          # Your ECR repo name
+  CONTAINER_NAME: tf-secrets-node-app     # Your container name
+  IMAGE_TAG: ${{ github.sha }}            # Uses commit hash as tag
+
+jobs:
+  build-test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'              # Matches your package.json
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+  security:
+    name: Security Checks
+    runs-on: ubuntu-latest
+    needs: build-test
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      # Snyk Dependency Scan
+      - name: Scan Node.js dependencies
+        uses: snyk/actions/node@master
+        with:
+          command: test
+          args: --all-projects --fail-on=upgradable
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+      # Build Docker image for container scanning
+      - name: Build Docker image for scanning
+        run: docker build -t $CONTAINER_NAME .
+
+      # Snyk Container Scan
+      - name: Scan Docker image
+        uses: snyk/actions/docker@master
+        with:
+          image: $CONTAINER_NAME
+          args: --severity-threshold=high
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+  deploy:
+    name: Deploy to ECR
+    runs-on: ubuntu-latest
+    needs: [build-test, security]
+    #environment: production
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      # AWS Setup
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      # ECR Login
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      # Build and Tag
+      - name: Build Docker image
+        run: |
+          docker build -t ${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }} .
+          docker tag ${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }} \
+            ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+
+      # Push to ECR
+      - name: Push Docker image
+        run: |
+          docker push ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+        
+      # Output the ECR URI for reference
+      - name: Show ECR URI
+        run: |
+          echo "Image pushed to:"
+          echo "${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}"
