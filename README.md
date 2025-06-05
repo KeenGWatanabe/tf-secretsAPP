@@ -88,9 +88,12 @@ View push commands > generate image ID for ECS or EKS
 # run this to log Docker into ECR
 aws ecr get-login-password --region us-east-1 | sudo docker login --username AWS --password-stdin 255945442255.dkr.ecr.us-east-1.amazonaws.com
 # retry Docker push
-sudo docker push 255945442255.dkr.ecr.us-east-1.amazonaws.com/nodejs-app:latest
+sudo docker push 255945442255.dkr.ecr.us-east-1.amazonaws.com/ce-grp-4r:latest
 
 # run ECS.tf (G4infra) before pushing images to it
 
+# CHANGE ECR IF NEEDED 
+.github/workflows/nodejs-ecr.yml
+ln 11, 12
 # snyk check passed!
 ![snyk check in workflows](image.png)
