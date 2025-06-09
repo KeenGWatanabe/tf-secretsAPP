@@ -11,7 +11,7 @@ WORKDIR /usr/src/app
 # Install dependencies (including devDependencies if needed)
 # safter than `RUN npm install`
 # RUN npm ci --only=production
-RUN npm install -g nodemon && npm install  
+RUN npm install -g nodemon && npm install aws-sdk && npm install
 
 
 # Copy the rest of the app (excluding files in .dockerignore)
