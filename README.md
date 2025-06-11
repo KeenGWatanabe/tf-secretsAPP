@@ -100,3 +100,6 @@ sudo docker push 255945442255.dkr.ecr.us-east-1.amazonaws.com/ce-grp-4r:latest
 ln 11, 12
 # snyk check passed!
 ![snyk check in workflows](image.png)
+
+# deployment logs on ECS cluster > Services > logs
+![deployment logs](image-1.png)

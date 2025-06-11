@@ -8,8 +8,8 @@ on:
 
 env:
   AWS_REGION: us-east-1                   # Change if needed
-  ECR_REPOSITORY: ce-grp-4r-app          # Your ECR repo name
-  CONTAINER_NAME: ce-grp-4r-app     # Your container name
+  ECR_REPOSITORY: secrets-app          # Your ECR repo name
+  CONTAINER_NAME: secrets-app     # Your container name
   IMAGE_TAG: ${{ github.sha }}            # Uses commit hash as tag
 
 jobs:
