@@ -2,9 +2,9 @@ name: Node.js to ECR Deployment
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "secrets" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "secrets" ]
 
 env:
   AWS_REGION: us-east-1                   # Change if needed

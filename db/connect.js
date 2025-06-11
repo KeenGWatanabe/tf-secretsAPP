@@ -19,7 +19,7 @@ const getSecretValue = async (secretName) => {
 const connectDB = async () => {
   try {
     console.log('🔍 Fetching DB credentials from Secrets Manager...');
-    const secretData = await getSecretValue('prod/mongodb_uri'); // Replace with your secret ARN or name
+    const secretData = await getSecretValue('code/mongodb_uri'); // Replace with your secret ARN or name
     const MONGODB_URI = secretData.MONGODB_URI;
 
     if (!MONGODB_URI || !MONGODB_URI.startsWith('mongodb')) {

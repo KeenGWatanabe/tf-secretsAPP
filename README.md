@@ -1,3 +1,6 @@
+change secrets name in app
+connect.js ln 22 
+
 # check node version
 node -v
 
