@@ -1,24 +1,27 @@
 # Use official lightweight Node.js image
 FROM node:22-alpine
 
-# Set working directory inside the container
-WORKDIR /usr/src/app
-
-# Copy package files first for better caching
+# Copy package files FIRST for better caching
 COPY package*.json /usr/src/app/
 
-# Install dependencies
-RUN npm install -g nodemon && npm install aws-sdk && npm install  
+# Set working directory in Docker container
+# WORKDIR /usr/src/app
+WORKDIR /usr/src/app
+
+# Install dependencies (including devDependencies if needed)
+# safter than `RUN npm install`
+# RUN npm ci --only=production
+RUN npm install -g nodemon && npm install  
+
 
 # Copy the rest of the app (excluding files in .dockerignore)
 COPY . .
 
-# Set ENV variables explicitly for ECS compatibility
-ARG MONGODB_URI
-ENV MONGODB_URI=${MONGODB_URI}
+# Copy .env file (ensure it's not in .dockerignore)
+COPY .env .
 
-# Expose port
+# Expose the app's port (adjust if your app uses a different port)
 EXPOSE 5000
 
-# Command to start the app
+# Command to run the app (matches your npm start script)
 CMD ["node", "app.js"]
