@@ -14,8 +14,8 @@ RUN npm install -g nodemon && npm install aws-sdk && npm install
 COPY . .
 
 # Set ENV variables explicitly for ECS compatibility
-ARG MONGODB_URI
-ENV MONGODB_URI=${MONGODB_URI}
+# ARG MONGODB_URI
+# ENV MONGODB_URI=${MONGODB_URI}
 
 # Expose port
 EXPOSE 5000
