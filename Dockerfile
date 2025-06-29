@@ -18,7 +18,7 @@ ARG MONGODB_URI
 ENV MONGODB_URI=${MONGODB_URI}
 
 # Expose port
-EXPOSE 5000
+EXPOSE 3000
 
 # Command to start the app
 CMD ["node", "app.js"]

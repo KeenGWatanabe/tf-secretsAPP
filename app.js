@@ -9,7 +9,7 @@ const errorHandlerMiddleware = require('./middleware/error-handler');
 
 
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 3000;
 console.log('🔍 Starting server...');
 
 const start = async () => {
