@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 ////We will fetch credentials from AWS Secretst Manager dynamically//////////////
 const AWS = require('aws-sdk');
-const secretsManager = new AWS.SecretsManager({region: 'us-east-1'});
+const secretsManager = new AWS.SecretsManager({region: 'ap-southeast-1'});
 
 const getSecretValue = async (secretName) => {
   try {
